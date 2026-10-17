@@ -25,7 +25,7 @@ export interface Job {
 
 export const PROFILE = {
 	name: 'Namoussi Yayaoui',
-	email: 'namoussi@live.fr',
+	email: 'contact@silush.com',
 	linkedin: 'https://www.linkedin.com/in/namoussi-yayaoui',
 	github: 'https://github.com/ForgetC',
 	site: 'https://cv.silush.com',
