@@ -1,0 +1,21 @@
+---
+// Alchemical glyphs for the four elemental stones (fire/air point up,
+// water/earth point down; air and earth carry a crossbar).
+import type { Element } from '../data/cv';
+
+interface Props {
+	element: Element;
+	size?: number;
+}
+
+const { element, size = 44 } = Astro.props;
+const up = element === 'fire' || element === 'air';
+const bar = element === 'air' || element === 'earth';
+const tri = up ? '24,6 43,40 5,40' : '5,8 43,8 24,42';
+const barY = up ? 28 : 21;
+---
+
+<svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" class="glyph" style={`color: var(--${element})`}>
+	<polygon points={tri} fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"></polygon>
+	{bar && <line x1="11" x2="37" y1={barY} y2={barY} stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></line>}
+</svg>

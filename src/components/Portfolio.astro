@@ -1,0 +1,583 @@
+---
+import BaseHead from './BaseHead.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import ElementGlyph from './ElementGlyph.astro';
+import { CV, PROFILE, type Lang } from '../data/cv';
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = CV[lang];
+const stones = [
+	{ element: 'air', x: 50, y: 8 },
+	{ element: 'fire', x: 92, y: 50 },
+	{ element: 'earth', x: 50, y: 92 },
+	{ element: 'water', x: 8, y: 50 },
+] as const;
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={t.meta.title} description={t.meta.description} lang={lang} />
+	</head>
+	<body>
+		<Header lang={lang} />
+		<main>
+			<!-- Hero -->
+			<div class="hero wrap">
+				<div class="hero-text">
+					<p class="label"><b>●</b> {t.hero.kicker} · {t.hero.location}</p>
+					<h1>{PROFILE.name}</h1>
+					<p class="tagline">{t.hero.tagline}</p>
+					<p class="lead">{t.hero.lead}</p>
+					<div class="cta">
+						<a class="btn primary" href="#contact">{t.hero.ctaContact}</a>
+						<a class="btn" href={PROFILE.linkedin} target="_blank" rel="noopener">{t.hero.ctaLinkedin} ↗</a>
+					</div>
+					<ul class="stats">
+						{t.hero.stats.map((s) => (
+							<li>
+								<strong>{s.value}</strong>
+								<span>{s.label}</span>
+							</li>
+						))}
+					</ul>
+				</div>
+				<div class="stones" aria-hidden="true">
+					<svg class="orbit" viewBox="0 0 100 100">
+						<circle cx="50" cy="50" r="42" fill="none" stroke="var(--line)" stroke-width="0.4" stroke-dasharray="1 2"></circle>
+						<circle cx="50" cy="50" r="26" fill="none" stroke="var(--line)" stroke-width="0.4"></circle>
+					</svg>
+					<div class="core"><span></span></div>
+					{stones.map((s) => (
+						<div class="stone" style={`left:${s.x}%;top:${s.y}%;--c:var(--${s.element})`}>
+							<ElementGlyph element={s.element} size={38} />
+						</div>
+					))}
+				</div>
+			</div>
+
+			<!-- Five elements -->
+			<section id="elements">
+				<div class="wrap">
+					<div class="section-head">
+						<p class="label"><b>01</b> / {t.nav.elements}</p>
+						<h2>{t.elements.title}</h2>
+						<p>{t.elements.intro}</p>
+					</div>
+					<div class="pillars">
+						{t.elements.pillars.map((p) => (
+							<article class="pillar" style={`--c:var(--${p.element})`}>
+								<div class="pillar-top">
+									<ElementGlyph element={p.element} size={40} />
+									<span class="label">{p.stone}</span>
+								</div>
+								<h3>{p.title}</h3>
+								<p>{p.pitch}</p>
+								<ul class="tools">
+									{p.tools.map((tool) => <li class="chip">{tool}</li>)}
+								</ul>
+							</article>
+						))}
+						<article class="fifth">
+							<div class="fifth-glow" aria-hidden="true"></div>
+							<p class="label"><b>05</b> · {t.elements.fifth.label}</p>
+							<h3>{t.elements.fifth.title}</h3>
+							<p>{t.elements.fifth.text}</p>
+							<ul class="tools">
+								{t.elements.fifth.traits.map((tr) => <li class="chip">{tr}</li>)}
+							</ul>
+						</article>
+					</div>
+				</div>
+			</section>
+
+			<!-- Experience -->
+			<section id="experience">
+				<div class="wrap">
+					<div class="section-head">
+						<p class="label"><b>02</b> / {t.nav.experience}</p>
+						<h2>{t.experience.title}</h2>
+					</div>
+					<ol class="timeline">
+						{t.experience.jobs.map((j, i) => (
+							<li class="job">
+								<div class="job-meta">
+									<span class="label">{j.period}</span>
+									<span class="place">{j.place}</span>
+								</div>
+								<div class={`job-body ${i === 0 ? 'current' : ''}`}>
+									<h3>{j.company}</h3>
+									<p class="role">{j.role}</p>
+									<p class="summary">{j.summary}</p>
+									<ul class="highlights">
+										{j.highlights.map((h) => <li>{h}</li>)}
+									</ul>
+									{j.tags && (
+										<ul class="tools">
+											{j.tags.map((tag) => <li class="chip">{tag}</li>)}
+										</ul>
+									)}
+								</div>
+							</li>
+						))}
+					</ol>
+					<div class="earlier">
+						<p class="label">{t.experience.earlier.title}</p>
+						<div class="earlier-grid">
+							{t.experience.earlier.items.map((e) => (
+								<div class="earlier-item">
+									<span class="label">{e.period}</span>
+									<h4>{e.company}</h4>
+									<p class="role">{e.role}</p>
+									<p>{e.text}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Education -->
+			<section id="education">
+				<div class="wrap edu">
+					<div>
+						<div class="section-head">
+							<p class="label"><b>03</b> / {t.nav.education}</p>
+							<h2>{t.education.title}</h2>
+						</div>
+						<ul class="degrees">
+							{t.education.items.map((d) => (
+								<li>
+									<span class="label">{d.period}</span>
+									<div>
+										<strong>{d.degree}</strong>
+										<span>{d.school}</span>
+									</div>
+								</li>
+							))}
+						</ul>
+					</div>
+					<aside class="certs">
+						<p class="label">{t.education.certTitle}</p>
+						<ul>
+							{t.education.certs.map((c) => <li>{c}</li>)}
+						</ul>
+					</aside>
+				</div>
+			</section>
+
+			<!-- Lab -->
+			<section id="lab">
+				<div class="wrap">
+					<div class="section-head">
+						<p class="label"><b>04</b> / {t.nav.lab}</p>
+						<h2>{t.lab.title}</h2>
+						<p>{t.lab.intro}</p>
+					</div>
+					<div class="lab-grid">
+						{t.lab.items.map((l) => (
+							<article class="lab-card">
+								<h3>{l.title}</h3>
+								<p>{l.text}</p>
+							</article>
+						))}
+					</div>
+				</div>
+			</section>
+
+			<!-- Contact -->
+			<section id="contact">
+				<div class="wrap contact">
+					<p class="label"><b>05</b> / {t.nav.contact}</p>
+					<h2>{t.contact.title}</h2>
+					<p>{t.contact.text}</p>
+					<div class="cta">
+						<a class="btn primary" href={`mailto:${PROFILE.email}`}>{t.contact.email}</a>
+						<a class="btn" href={PROFILE.linkedin} target="_blank" rel="noopener">{t.contact.linkedin} ↗</a>
+					</div>
+				</div>
+			</section>
+		</main>
+		<Footer lang={lang} />
+	</body>
+</html>
+
+<style>
+	/* Hero */
+	.hero {
+		display: grid;
+		grid-template-columns: 1.25fr 1fr;
+		align-items: center;
+		gap: 3rem;
+		padding: clamp(3.5rem, 9vw, 7rem) 0 clamp(3.5rem, 8vw, 6rem);
+	}
+	.hero-text {
+		display: grid;
+		gap: 1.3rem;
+	}
+	h1 {
+		font-size: clamp(2.8rem, 8vw, 5.4rem);
+		font-weight: 700;
+	}
+	.tagline {
+		font-family: var(--font-display);
+		font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+		line-height: 1.3;
+		color: var(--accent);
+		max-width: 26ch;
+	}
+	.lead {
+		color: var(--muted);
+		max-width: 58ch;
+	}
+	.cta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 0.4rem;
+	}
+	.stats {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2.2rem;
+		margin-top: 1rem;
+		padding-top: 1.4rem;
+		border-top: 1px solid var(--line);
+	}
+	.stats li {
+		display: grid;
+	}
+	.stats strong {
+		font-family: var(--font-display);
+		font-size: 1.7rem;
+		line-height: 1.1;
+	}
+	.stats span {
+		color: var(--muted);
+		font-size: 0.85rem;
+	}
+
+	/* Stones visual */
+	.stones {
+		position: relative;
+		aspect-ratio: 1;
+		width: min(100%, 400px);
+		justify-self: center;
+	}
+	.orbit {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		animation: spin 120s linear infinite;
+	}
+	.core {
+		position: absolute;
+		inset: 37%;
+		border-radius: 50%;
+		display: grid;
+		place-items: center;
+		background: radial-gradient(circle, var(--accent) 0%, var(--accent) 38%, transparent 70%);
+		filter: blur(0.5px);
+		animation: pulse 5s ease-in-out infinite;
+	}
+	.core span {
+		width: 34%;
+		height: 34%;
+		border-radius: 50%;
+		background: #fff8f0;
+		box-shadow: 0 0 40px 12px var(--accent-soft);
+	}
+	.stone {
+		position: absolute;
+		translate: -50% -50%;
+		display: grid;
+		place-items: center;
+		width: 4.6rem;
+		height: 4.6rem;
+		border-radius: 1.1rem;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		box-shadow: var(--shadow);
+	}
+	.stone::after {
+		content: '';
+		position: absolute;
+		inset: -1px;
+		border-radius: inherit;
+		border: 1px solid var(--c);
+		opacity: 0.35;
+	}
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+	@keyframes pulse {
+		50% {
+			transform: scale(1.06);
+			opacity: 0.9;
+		}
+	}
+
+	/* Pillars */
+	.pillars {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.2rem;
+	}
+	.pillar,
+	.fifth,
+	.lab-card {
+		position: relative;
+		display: grid;
+		align-content: start;
+		gap: 0.8rem;
+		padding: 1.7rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--line);
+		overflow: hidden;
+	}
+	.pillar {
+		border-top: 3px solid var(--c);
+	}
+	.pillar-top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.pillar h3,
+	.fifth h3 {
+		font-size: 1.5rem;
+	}
+	.pillar p,
+	.fifth p,
+	.lab-card p {
+		color: var(--muted);
+	}
+	.tools {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin-top: 0.3rem;
+	}
+	.fifth {
+		grid-column: 1 / -1;
+		padding: 2.2rem;
+		border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+		background: linear-gradient(120deg, var(--accent-soft), transparent 55%), var(--surface);
+	}
+	.fifth p {
+		max-width: 70ch;
+	}
+	.fifth-glow {
+		position: absolute;
+		right: -6rem;
+		top: -6rem;
+		width: 18rem;
+		height: 18rem;
+		border-radius: 50%;
+		background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+		pointer-events: none;
+	}
+
+	/* Timeline */
+	.timeline {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 2.6rem;
+	}
+	.job {
+		display: grid;
+		grid-template-columns: 11rem 1fr;
+		gap: 2rem;
+	}
+	.job-meta {
+		display: grid;
+		align-content: start;
+		gap: 0.2rem;
+		padding-top: 0.35rem;
+	}
+	.place {
+		color: var(--muted);
+		font-size: 0.9rem;
+	}
+	.job-body {
+		display: grid;
+		gap: 0.6rem;
+		padding-left: 1.6rem;
+		border-left: 2px solid var(--line);
+	}
+	.job-body.current {
+		border-left-color: var(--accent);
+	}
+	.job-body h3 {
+		font-size: 1.6rem;
+	}
+	.role {
+		font-family: var(--font-display);
+		font-weight: 500;
+		color: var(--accent);
+	}
+	.summary {
+		color: var(--muted);
+	}
+	.highlights {
+		display: grid;
+		gap: 0.35rem;
+	}
+	.highlights li {
+		position: relative;
+		padding-left: 1.2rem;
+	}
+	.highlights li::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0.72em;
+		width: 0.45rem;
+		height: 1px;
+		background: var(--accent);
+	}
+	.earlier {
+		margin-top: 3.5rem;
+		display: grid;
+		gap: 1.2rem;
+	}
+	.earlier-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.2rem;
+	}
+	.earlier-item {
+		display: grid;
+		align-content: start;
+		gap: 0.25rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--line);
+	}
+	.earlier-item h4 {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: 1.1rem;
+	}
+	.earlier-item .role {
+		font-size: 0.92rem;
+	}
+	.earlier-item p:last-child {
+		color: var(--muted);
+		font-size: 0.92rem;
+	}
+
+	/* Education */
+	.edu {
+		display: grid;
+		grid-template-columns: 1.6fr 1fr;
+		gap: 3rem;
+	}
+	.degrees {
+		display: grid;
+	}
+	.degrees li {
+		display: grid;
+		grid-template-columns: 8rem 1fr;
+		gap: 1.2rem;
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--line);
+	}
+	.degrees li div {
+		display: grid;
+	}
+	.degrees li div span {
+		color: var(--muted);
+		font-size: 0.92rem;
+	}
+	.certs {
+		align-self: start;
+		display: grid;
+		gap: 1rem;
+		padding: 1.7rem;
+		border-radius: var(--radius);
+		background: var(--surface);
+		border: 1px solid var(--line);
+	}
+	.certs ul {
+		display: grid;
+		gap: 0.7rem;
+	}
+	.certs li {
+		padding-left: 1.4rem;
+		position: relative;
+	}
+	.certs li::before {
+		content: '✓';
+		position: absolute;
+		left: 0;
+		color: var(--accent);
+	}
+
+	/* Lab */
+	.lab-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.2rem;
+	}
+	.lab-card h3 {
+		font-size: 1.25rem;
+	}
+
+	/* Contact */
+	.contact {
+		display: grid;
+		justify-items: start;
+		gap: 1rem;
+	}
+	.contact h2 {
+		font-size: clamp(2.4rem, 6vw, 4rem);
+	}
+	.contact > p:not(.label) {
+		color: var(--muted);
+		max-width: 52ch;
+		font-size: 1.1rem;
+	}
+
+	@media (max-width: 900px) {
+		.hero,
+		.edu {
+			grid-template-columns: 1fr;
+		}
+		.stones {
+			width: min(80%, 320px);
+			order: -1;
+		}
+		.lab-grid,
+		.earlier-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+	@media (max-width: 680px) {
+		.pillars {
+			grid-template-columns: 1fr;
+		}
+		.job {
+			grid-template-columns: 1fr;
+			gap: 0.6rem;
+		}
+		.degrees li {
+			grid-template-columns: 1fr;
+			gap: 0.2rem;
+		}
+		.stone {
+			width: 3.6rem;
+			height: 3.6rem;
+		}
+	}
+</style>
