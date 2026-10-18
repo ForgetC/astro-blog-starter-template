@@ -3,6 +3,7 @@ import BaseHead from './BaseHead.astro';
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import ElementGlyph from './ElementGlyph.astro';
+import AskCv from './AskCv.astro';
 import { CV, PROFILE, type Lang } from '../data/cv';
 
 interface Props {
@@ -187,6 +188,18 @@ const stones = [
 							</article>
 						))}
 					</div>
+				</div>
+			</section>
+
+			<!-- Ask my CV (Workers AI) -->
+			<section id="ask">
+				<div class="wrap">
+					<div class="section-head">
+						<p class="label"><b>✦</b> / IA</p>
+						<h2>{t.ask.title}</h2>
+						<p>{t.ask.intro}</p>
+					</div>
+					<AskCv lang={lang} />
 				</div>
 			</section>
 

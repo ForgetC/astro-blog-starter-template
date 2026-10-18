@@ -13,6 +13,25 @@
 		"enabled": true
 	},
 	"upload_source_maps": true,
+	"ai": {
+		"binding": "AI"
+	},
+	"ratelimits": [
+		{
+			"name": "ASK_LIMIT",
+			"namespace_id": "1001",
+			"simple": {
+				"limit": 3,
+				"period": 60
+			}
+		}
+	],
+	"kv_namespaces": [
+		{
+			"binding": "ASK_KV",
+			"id": "c5be083cb5c84ec49bfde63458f5c9dc"
+		}
+	],
 	"routes": [
 		{
 			"pattern": "cv.silush.com",
