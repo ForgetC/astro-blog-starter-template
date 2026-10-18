@@ -1,0 +1,163 @@
+---
+// "Ask my CV" box: question → POST /api/ask (Turnstile token attached) → answer.
+import { CV, type Lang } from '../data/cv';
+import { MAX_QUESTION } from '../lib/ask';
+import { TURNSTILE_SITEKEY } from '../consts';
+
+interface Props {
+	lang: Lang;
+}
+const { lang } = Astro.props;
+const t = CV[lang].ask;
+---
+
+<div class="ask" data-lang={lang} data-texts={JSON.stringify({ thinking: t.thinking, errors: t.errors })}>
+	<form class="ask-form">
+		<input
+			class="ask-input"
+			name="q"
+			type="text"
+			maxlength={MAX_QUESTION}
+			placeholder={t.placeholder}
+			aria-label={t.title}
+			autocomplete="off"
+			required
+		/>
+		<button class="btn primary" type="submit">{t.button}</button>
+	</form>
+	<div class="ask-suggestions">
+		{t.suggestions.map((s) => <button type="button" class="chip">{s}</button>)}
+	</div>
+	<div class="cf-turnstile" data-sitekey={TURNSTILE_SITEKEY} data-size="flexible" data-appearance="interaction-only" data-theme="auto" data-language={lang}></div>
+	<p class="ask-answer" aria-live="polite" hidden></p>
+	<p class="ask-note">{t.disclaimer}</p>
+</div>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+	type Texts = { thinking: string; errors: Record<string, string> };
+	declare const turnstile: { getResponse: (el?: Element) => string | undefined; reset: (el?: Element) => void } | undefined;
+
+	for (const box of document.querySelectorAll<HTMLElement>('.ask')) {
+		const texts = JSON.parse(box.dataset.texts ?? '{}') as Texts;
+		const form = box.querySelector<HTMLFormElement>('.ask-form')!;
+		const input = box.querySelector<HTMLInputElement>('.ask-input')!;
+		const button = form.querySelector<HTMLButtonElement>('button')!;
+		const out = box.querySelector<HTMLElement>('.ask-answer')!;
+		const widget = box.querySelector('.cf-turnstile') ?? undefined;
+
+		const show = (text: string, isError = false) => {
+			out.hidden = false;
+			out.textContent = text;
+			out.classList.toggle('error', isError);
+		};
+
+		const ask = async () => {
+			const q = input.value.trim();
+			if (q.length < 3) return show(texts.errors.tooShort, true);
+			const token = typeof turnstile !== 'undefined' ? turnstile.getResponse(widget) ?? '' : '';
+			button.disabled = true;
+			show(texts.thinking);
+			try {
+				const r = await fetch('/api/ask', {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ q, lang: box.dataset.lang, token }),
+				});
+				const data = (await r.json()) as { answer?: string; error?: string };
+				if (data.answer) show(data.answer);
+				else show(texts.errors[data.error ?? 'generic'] ?? texts.errors.generic, true);
+			} catch {
+				show(texts.errors.generic, true);
+			} finally {
+				button.disabled = false;
+				// A Turnstile token is single-use.
+				if (typeof turnstile !== 'undefined') turnstile.reset(widget);
+			}
+		};
+
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			void ask();
+		});
+		for (const chip of box.querySelectorAll<HTMLButtonElement>('.chip')) {
+			chip.addEventListener('click', () => {
+				input.value = chip.textContent ?? '';
+				void ask();
+			});
+		}
+	}
+</script>
+
+<style>
+	.ask {
+		display: grid;
+		gap: 0.9rem;
+		max-width: 760px;
+	}
+	.ask-form {
+		display: flex;
+		gap: 0.6rem;
+	}
+	.ask-input {
+		flex: 1;
+		min-width: 0;
+		padding: 0.75rem 1.1rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: var(--surface);
+		color: var(--text);
+		font: inherit;
+	}
+	.ask-input:focus {
+		outline: 2px solid var(--accent);
+		outline-offset: 1px;
+	}
+	.ask-suggestions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+	.chip {
+		padding: 0.35rem 0.8rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: var(--bg-soft);
+		color: var(--muted);
+		font: inherit;
+		font-size: 0.85rem;
+		cursor: pointer;
+	}
+	.chip:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.ask-answer {
+		margin: 0;
+		padding: 1.1rem 1.3rem;
+		border: 1px solid var(--line);
+		border-left: 3px solid var(--accent);
+		border-radius: var(--radius);
+		background: var(--surface);
+		white-space: pre-wrap;
+	}
+	.ask-answer.error {
+		border-left-color: var(--muted);
+		color: var(--muted);
+	}
+	.ask-note {
+		margin: 0;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	button:disabled {
+		opacity: 0.6;
+		cursor: progress;
+	}
+	@media (max-width: 520px) {
+		.ask-form {
+			flex-direction: column;
+		}
+	}
+</style>

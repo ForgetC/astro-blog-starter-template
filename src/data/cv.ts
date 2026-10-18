@@ -188,6 +188,22 @@ const fr = {
 		email: 'Écrire un e-mail',
 		linkedin: 'Voir mon LinkedIn',
 	},
+	ask: {
+		title: 'Posez une question à mon CV',
+		intro: 'Un assistant IA répond à partir de ce CV uniquement. Il tourne sur Cloudflare Workers AI, comme le reste du site.',
+		placeholder: 'Ex. : quelle expérience avec Kubernetes ?',
+		button: 'Demander',
+		thinking: 'Réflexion…',
+		suggestions: ['Quelles certifications ?', 'Expérience en haute disponibilité ?', 'Que fait tourner le lab ?'],
+		errors: {
+			tooShort: 'Question trop courte.',
+			captcha: 'Vérification anti-robot requise, réessayez.',
+			rate: "Trop de questions d'affilée : patientez une minute.",
+			quota: 'Le quota du jour est atteint : revenez demain ou écrivez-moi directement.',
+			generic: "L'assistant ne répond pas pour le moment : écrivez-moi directement.",
+		},
+		disclaimer: 'Réponses générées par IA à partir du CV : elles peuvent être imprécises.',
+	},
 	ui: { theme: 'Changer de thème', lang: 'English', langHref: '/en/', footer: 'Conçu et hébergé sur Cloudflare Workers.' },
 };
 
@@ -345,6 +361,22 @@ const en: typeof fr = {
 		text: 'An infrastructure project, a platform to make reliable, or just a chat: drop me a line.',
 		email: 'Send an email',
 		linkedin: 'View my LinkedIn',
+	},
+	ask: {
+		title: 'Ask my CV',
+		intro: 'An AI assistant answers from this CV only. It runs on Cloudflare Workers AI, like the rest of the site.',
+		placeholder: 'E.g. what Kubernetes experience?',
+		button: 'Ask',
+		thinking: 'Thinking…',
+		suggestions: ['Which certifications?', 'High-availability experience?', 'What runs in the lab?'],
+		errors: {
+			tooShort: 'Question too short.',
+			captcha: 'Anti-bot check required, please try again.',
+			rate: 'Too many questions in a row: please wait a minute.',
+			quota: "Today's quota is reached: come back tomorrow or email me directly.",
+			generic: 'The assistant is unavailable right now: please email me directly.',
+		},
+		disclaimer: 'AI-generated answers based on the CV: they may be inaccurate.',
 	},
 	ui: { theme: 'Toggle theme', lang: 'Français', langHref: '/', footer: 'Designed and served on Cloudflare Workers.' },
 };
