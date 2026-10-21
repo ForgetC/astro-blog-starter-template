@@ -167,7 +167,10 @@ const fr = {
 		],
 		certTitle: 'Certifications',
 		certs: [
+			'AWS Certified Solutions Architect',
+			'Qualys VMDR : Vulnerability Management, Detection and Response',
 			'AZ-900 : Microsoft Azure Fundamentals',
+			'Anthropic : AI Fluency, Framework & Foundations',
 			'Windows Server 2019 : gestion de la sécurité des accès',
 			'Cybersecurity Essentials',
 			'Introduction to Cybersecurity',
@@ -341,7 +344,10 @@ const en: typeof fr = {
 		],
 		certTitle: 'Certifications',
 		certs: [
+			'AWS Certified Solutions Architect',
+			'Qualys VMDR: Vulnerability Management, Detection and Response',
 			'AZ-900: Microsoft Azure Fundamentals',
+			'Anthropic: AI Fluency, Framework & Foundations',
 			'Windows Server 2019: access security management',
 			'Cybersecurity Essentials',
 			'Introduction to Cybersecurity',
