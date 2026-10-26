@@ -1,0 +1,352 @@
+---
+// Printable A4 resume, rendered from the same data as the site.
+// `npm run cv:pdf` prints /cv/ and /en/cv/ to the PDFs in public/.
+import '@fontsource-variable/space-grotesk';
+import { CV, PROFILE, type Lang } from '../data/cv';
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = CV[lang];
+const site = PROFILE.site.replace('https://', '');
+const linkedin = PROFILE.linkedin.replace('https://www.', '');
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta name="robots" content="noindex" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{PROFILE.name} · CV</title>
+	</head>
+	<body>
+		<main class="page">
+			<header class="top">
+				<div>
+					<h1>{PROFILE.name}</h1>
+					<p class="kicker">{t.hero.kicker}</p>
+				</div>
+				<ul class="contact">
+					<li>{t.hero.location}</li>
+					<li><a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a></li>
+					<li><a href={PROFILE.linkedin}>{linkedin}</a></li>
+					<li><a href={PROFILE.site}>{site}</a></li>
+				</ul>
+			</header>
+
+			<section>
+				<h2>{t.resume.profile}</h2>
+				<p class="lead">{t.hero.tagline} {t.hero.lead}</p>
+			</section>
+
+			<section>
+				<h2>{t.resume.skills}</h2>
+				<dl class="skills">
+					{t.elements.pillars.map((p) => (
+						<div style={`--c:var(--${p.element})`}>
+							<dt>{p.title}</dt>
+							<dd>{p.tools.join(' · ')}</dd>
+						</div>
+					))}
+					<div style="--c:var(--accent)">
+						<dt>{t.elements.fifth.title}</dt>
+						<dd>{t.elements.fifth.traits.filter((tr) => tr !== 'FR · EN').join(' · ')}</dd>
+					</div>
+				</dl>
+			</section>
+
+			<section>
+				<h2>{t.experience.title}</h2>
+				{t.experience.jobs.map((j) => (
+					<article class="job">
+						<div class="job-head">
+							<h3>{j.role} · <span>{j.company}</span></h3>
+							<p class="meta">{j.period} · {j.place}</p>
+						</div>
+						<p class="summary">{j.summary}</p>
+						<ul class="bullets">
+							{j.highlights.map((h) => <li>{h}</li>)}
+						</ul>
+						{j.tags && <p class="tags">{j.tags.join(' · ')}</p>}
+					</article>
+				))}
+				<div class="earlier">
+					{t.experience.earlier.items.map((e) => (
+						<p>
+							<b>{e.period}</b> · <strong>{e.role}</strong>, {e.company}. {e.text}
+						</p>
+					))}
+				</div>
+			</section>
+
+			<div class="cols">
+				<section>
+					<h2>{t.education.title}</h2>
+					<ul class="degrees">
+						{t.education.items.map((d) => (
+							<li>
+								<strong>{d.degree}</strong>
+								<span>{d.school} · {d.period}</span>
+							</li>
+						))}
+					</ul>
+				</section>
+				<section>
+					<h2>{t.education.certTitle}</h2>
+					<ul class="certs">
+						{t.education.certs.map((c) => <li>{c}</li>)}
+					</ul>
+					<h2 class="spaced">{t.resume.languages}</h2>
+					<p>{t.resume.languagesText}</p>
+				</section>
+			</div>
+
+			<section>
+				<h2>{t.resume.lab}</h2>
+				<ul class="lab">
+					{t.lab.items.map((l) => (
+						<li><strong>{l.title}</strong>{lang === 'fr' ? ' : ' : ': '}{l.text}</li>
+					))}
+				</ul>
+			</section>
+		</main>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--text: #16171b;
+		--muted: #5d6068;
+		--line: #dedad2;
+		--accent: #e8590c;
+		--air: #3b8fc4;
+		--earth: #a87332;
+		--fire: #d9480f;
+		--water: #138a87;
+		--font-display: 'Space Grotesk Variable', 'Segoe UI', system-ui, sans-serif;
+		--font-body: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+		color-scheme: light;
+	}
+	@page {
+		size: A4;
+		margin: 13mm 14mm;
+	}
+	* {
+		box-sizing: border-box;
+	}
+	html {
+		background: #e9e7e2;
+	}
+	body {
+		margin: 0;
+		color: var(--text);
+		font-family: var(--font-body);
+		font-size: 9.6pt;
+		line-height: 1.42;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+	.page {
+		max-width: 210mm;
+		margin: 2rem auto;
+		padding: 13mm 14mm;
+		background: #fff;
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+	}
+	@media print {
+		html {
+			background: #fff;
+		}
+		.page {
+			margin: 0;
+			padding: 0;
+			max-width: none;
+			box-shadow: none;
+		}
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	h1,
+	h2,
+	h3 {
+		font-family: var(--font-display);
+		margin: 0;
+		line-height: 1.15;
+	}
+	p,
+	ul,
+	dl,
+	dd {
+		margin: 0;
+	}
+	ul {
+		padding: 0;
+		list-style: none;
+	}
+
+	.top {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 1rem;
+		padding-bottom: 3.5mm;
+		border-bottom: 2px solid var(--accent);
+	}
+	h1 {
+		font-size: 24pt;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+	}
+	.kicker {
+		margin-top: 1mm;
+		font-family: var(--font-display);
+		font-size: 12pt;
+		font-weight: 500;
+		color: var(--accent);
+	}
+	.contact {
+		text-align: right;
+		color: var(--muted);
+		font-size: 8.8pt;
+		line-height: 1.5;
+	}
+
+	section {
+		margin-top: 4.2mm;
+	}
+	h2 {
+		margin-bottom: 1.8mm;
+		font-size: 8.4pt;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+	h2.spaced {
+		margin-top: 3.5mm;
+	}
+	.lead {
+		color: #2b2d33;
+	}
+
+	.skills {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.6mm 6mm;
+	}
+	.skills div {
+		padding-left: 2.4mm;
+		border-left: 2px solid var(--c);
+	}
+	.skills dt {
+		font-family: var(--font-display);
+		font-weight: 600;
+	}
+	.skills dd {
+		color: var(--muted);
+		font-size: 8.8pt;
+	}
+
+	.job {
+		margin-bottom: 3.2mm;
+		break-inside: avoid;
+	}
+	.job-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+	}
+	h3 {
+		font-size: 10.6pt;
+		font-weight: 600;
+	}
+	h3 span {
+		color: var(--accent);
+	}
+	.meta {
+		flex: none;
+		color: var(--muted);
+		font-size: 8.6pt;
+	}
+	.summary {
+		margin-top: 0.6mm;
+		color: var(--muted);
+		font-style: italic;
+	}
+	.bullets {
+		margin-top: 0.8mm;
+	}
+	.bullets li {
+		position: relative;
+		padding-left: 3.4mm;
+	}
+	.bullets li::before {
+		content: '';
+		position: absolute;
+		left: 0.4mm;
+		top: 0.68em;
+		width: 1.6mm;
+		height: 1px;
+		background: var(--accent);
+	}
+	.tags {
+		margin-top: 0.8mm;
+		color: var(--muted);
+		font-size: 8.4pt;
+	}
+	.earlier {
+		display: grid;
+		gap: 0.6mm;
+		padding-top: 2mm;
+		border-top: 1px solid var(--line);
+		font-size: 8.8pt;
+		color: var(--muted);
+		break-inside: avoid;
+	}
+	.earlier b,
+	.earlier strong {
+		color: var(--text);
+	}
+
+	.cols {
+		display: grid;
+		grid-template-columns: 1.15fr 1fr;
+		gap: 7mm;
+		break-inside: avoid;
+	}
+	.degrees li {
+		display: grid;
+		padding: 0.9mm 0;
+		border-bottom: 1px solid var(--line);
+	}
+	.degrees span {
+		color: var(--muted);
+		font-size: 8.6pt;
+	}
+	.certs li {
+		position: relative;
+		padding-left: 3.6mm;
+		margin-bottom: 0.5mm;
+	}
+	.certs li::before {
+		content: '✓';
+		position: absolute;
+		left: 0;
+		color: var(--accent);
+	}
+	.lab {
+		display: grid;
+		gap: 0.6mm;
+		break-inside: avoid;
+	}
+	.lab strong {
+		font-family: var(--font-display);
+	}
+</style>

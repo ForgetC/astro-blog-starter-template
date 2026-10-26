@@ -207,6 +207,17 @@ const fr = {
 		},
 		disclaimer: 'Réponses générées par IA à partir du CV : elles peuvent être imprécises.',
 	},
+	resume: {
+		download: 'Télécharger mon CV (PDF)',
+		downloadFr: 'CV en français (PDF)',
+		downloadEn: 'CV en anglais (PDF)',
+		pdf: '/Namoussi_Yayaoui_CV_FR.pdf',
+		profile: 'Profil',
+		skills: 'Compétences',
+		languages: 'Langues',
+		languagesText: 'Français · Anglais',
+		lab: 'Projets personnels',
+	},
 	ui: { theme: 'Changer de thème', lang: 'English', langHref: '/en/', footer: 'Conçu et hébergé sur Cloudflare Workers.' },
 };
 
@@ -383,6 +394,17 @@ const en: typeof fr = {
 			generic: 'The assistant is unavailable right now: please email me directly.',
 		},
 		disclaimer: 'AI-generated answers based on the CV: they may be inaccurate.',
+	},
+	resume: {
+		download: 'Download my resume (PDF)',
+		downloadFr: 'Resume in French (PDF)',
+		downloadEn: 'Resume in English (PDF)',
+		pdf: '/Namoussi_Yayaoui_Resume_EN.pdf',
+		profile: 'Profile',
+		skills: 'Skills',
+		languages: 'Languages',
+		languagesText: 'French · English',
+		lab: 'Personal projects',
 	},
 	ui: { theme: 'Toggle theme', lang: 'Français', langHref: '/', footer: 'Designed and served on Cloudflare Workers.' },
 };

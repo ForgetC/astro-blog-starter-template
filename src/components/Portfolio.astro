@@ -37,6 +37,7 @@ const stones = [
 					<p class="lead">{t.hero.lead}</p>
 					<div class="cta">
 						<a class="btn primary" href="#contact">{t.hero.ctaContact}</a>
+						<a class="btn" href={t.resume.pdf} download>{t.resume.download} ↓</a>
 						<a class="btn" href={PROFILE.linkedin} target="_blank" rel="noopener">{t.hero.ctaLinkedin} ↗</a>
 					</div>
 					<ul class="stats">
@@ -212,6 +213,10 @@ const stones = [
 					<div class="cta">
 						<a class="btn primary" href={`mailto:${PROFILE.email}`}>{t.contact.email}</a>
 						<a class="btn" href={PROFILE.linkedin} target="_blank" rel="noopener">{t.contact.linkedin} ↗</a>
+					</div>
+					<div class="cta">
+						<a class="btn" href={CV.fr.resume.pdf} download hreflang="fr">{t.resume.downloadFr} ↓</a>
+						<a class="btn" href={CV.en.resume.pdf} download hreflang="en">{t.resume.downloadEn} ↓</a>
 					</div>
 				</div>
 			</section>
