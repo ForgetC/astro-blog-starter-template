@@ -25,10 +25,10 @@ export interface Job {
 
 export const PROFILE = {
 	name: 'Namoussi Yayaoui',
-	email: 'contact@silush.com',
+	email: 'namoussi@yayaoui.com',
 	linkedin: 'https://www.linkedin.com/in/namoussi-yayaoui',
 	github: 'https://github.com/ForgetC',
-	site: 'https://cv.silush.com',
+	site: 'https://namoussi.yayaoui.com',
 };
 
 const fr = {
