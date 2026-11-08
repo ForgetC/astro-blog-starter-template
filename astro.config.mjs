@@ -7,7 +7,7 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://cv.silush.com",
+	site: "https://namoussi.yayaoui.com",
 	// The /cv/ pages only exist to print the PDFs: keep them out of the sitemap.
 	integrations: [mdx(), sitemap({ filter: (page) => !/\/cv\/$/.test(page) })],
 	adapter: cloudflare({
